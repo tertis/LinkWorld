@@ -2,8 +2,10 @@
 using System.Collections;
 
 public class Loader : MonoBehaviour {
-	private const string GROUND_PATH = "Prefab/Ground/";
+	private const string GROUND_PATH = "Prefab/Ground/Ground";
+	private const string MATERIAL_PATH = "Materials/";
 	private const string ACTOR_PATH = "Prefab/Actor/";
+	private const float TILE_SCALE = 0.95f;
 
 	// Use this for initialization
 	void Start ()
@@ -12,6 +14,7 @@ public class Loader : MonoBehaviour {
 
 		InitializeMap ();
 		InitializeActor ();
+		InitializeCamera ();
 	}
 
 	/// <summary>
@@ -22,13 +25,22 @@ public class Loader : MonoBehaviour {
 		for (int i = 0; i < Manager.Resource.Map.Count; ++i)
 		{
 			string tileName = Manager.Resource.GroundName[Manager.Resource.Map[i]];
-			GameObject prefabTile = Manager.Action.Load<GameObject>("Prefab/Ground/" + tileName);
-			GameObject obj = GameObject.Instantiate(prefabTile);
-			obj.transform.SetParent(this.transform);
-			obj.transform.localPosition = new Vector3(i % 5, 0f, -i / 5);
-			obj.transform.Rotate(new Vector3(90.0f, 0f, 0f));
+			var obj = CreateTile(tileName);
+			obj.transform.localPosition = new Vector3(i % 5, -i /5, 0);
+			obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
 			obj.AddComponent<Ground>();
 		}
+	}
+
+	private GameObject CreateTile(string tileName)
+	{
+		var prefabTile = Manager.Action.Load<GameObject>(GROUND_PATH);
+		var tileMat = Manager.Action.Load<Material>(MATERIAL_PATH + tileName);
+		var obj = GameObject.Instantiate(prefabTile);
+		obj.GetComponent<MeshRenderer>().material = tileMat;
+		obj.transform.SetParent(this.transform);
+
+		return obj;
 	}
 
 	/// <summary>
@@ -37,5 +49,12 @@ public class Loader : MonoBehaviour {
 	private void InitializeActor()
 	{
 
+	}
+
+	private void InitializeCamera()
+	{
+		var trans = Camera.main.transform;
+		trans.position = new Vector3 (0, 0, -10);
+		trans.eulerAngles = new Vector3 (0, 0, 90);
 	}
 }
