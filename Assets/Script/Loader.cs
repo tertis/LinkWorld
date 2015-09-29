@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class Loader : MonoBehaviour {
-	private const string GROUND_PATH = "Prefab/Ground/Ground";
+	private const string PREFAB_PATH = "Prefab/";
+	private const string GROUND_PATH = PREFAB_PATH + "Ground";
+	private const string PAWN_PATH = PREFAB_PATH + "Pawn";
 	private const string MATERIAL_PATH = "Materials/";
-	private const string ACTOR_PATH = "Prefab/Actor/";
 	private const float TILE_SCALE = 0.95f;
 
 	// Use this for initialization
@@ -48,7 +49,10 @@ public class Loader : MonoBehaviour {
 	/// </summary>
 	private void InitializeActor()
 	{
-
+		var prefabPawn = Manager.Action.Load<GameObject> (PAWN_PATH);
+		var obj = GameObject.Instantiate (prefabPawn);
+		obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
+		obj.transform.SetParent (this.transform);
 	}
 
 	private void InitializeCamera()

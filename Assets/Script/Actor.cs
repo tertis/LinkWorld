@@ -1,15 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
-public class Life : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+namespace Actor
+{
+	public abstract class Base : MonoBehaviour {
+		private List<Component.Base> components;
 	}
 }
