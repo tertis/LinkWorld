@@ -16,6 +16,9 @@ public class Loader : MonoBehaviour {
 		InitializeMap ();
 		InitializeActor ();
 		InitializeCamera ();
+
+		GameObject obj = new GameObject ("InputMgr");
+		obj.AddComponent<Control.Manager> ();
 	}
 
 	/// <summary>
@@ -27,9 +30,9 @@ public class Loader : MonoBehaviour {
 		{
 			string tileName = Manager.Resource.GroundName[Manager.Resource.Map[i]];
 			var obj = CreateTile(tileName);
-			obj.transform.localPosition = new Vector3(i % 5, -i /5, 0);
+			obj.transform.localPosition = new Vector3(i % 5, i /5, 0);
 			obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
-			obj.AddComponent<Ground>();
+			Ground.Map.Add(obj.AddComponent<Ground>());
 		}
 	}
 
@@ -53,12 +56,15 @@ public class Loader : MonoBehaviour {
 		var obj = GameObject.Instantiate (prefabPawn);
 		obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
 		obj.transform.SetParent (this.transform);
+		obj.AddComponent<Actor.Movable> ();
 	}
 
 	private void InitializeCamera()
 	{
 		var trans = Camera.main.transform;
-		trans.position = new Vector3 (0, 0, -10);
+
+		var center = Ground.Map.Count / 5.0f / 2.0f;
+		trans.position = new Vector3 (center - 0.5f, center, -5);
 		trans.eulerAngles = new Vector3 (0, 0, 90);
 	}
 }

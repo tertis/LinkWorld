@@ -1,8 +1,19 @@
-﻿namespace Component
+﻿using UnityEngine;
+
+namespace Component
 {
+	public interface IOwner
+	{
+		Transform _Trans { get; }
+	}
+
 	public abstract class Base 
 	{
-		public abstract void Init (object param);
+		protected IOwner _Owner;
+		public virtual void Init (IOwner owner)
+		{
+			_Owner = owner;
+		}
 		public abstract void Action ();
 	}
 }
