@@ -6,8 +6,7 @@ public static class Global
     private const string GROUND_PATH = PREFAB_PATH + "Ground";
     private const string PAWN_PATH = PREFAB_PATH + "Pawn";
     private const string MATERIAL_PATH = "Materials/";
-    private const float TILE_SCALE = 0.95f;
-    public const int MAP_WIDTH = 5;
+    public const float TILE_SCALE = 0.95f;
 	public static LocalMap _map { get; private set; }
     
     private static Transform _root;
@@ -36,8 +35,6 @@ public static class Global
         {
             string tileName = Manager.Resource.GroundName[Manager.Resource.Map[i]];
             var obj = CreateTile(tileName);
-            obj.transform.localPosition = new Vector3(i % MAP_WIDTH, i / MAP_WIDTH, 0);
-            obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
             
             _map.AddGround(obj.AddComponent<Ground>());
         }

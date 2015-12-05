@@ -31,6 +31,7 @@ namespace Actor
 		public override void Init(int pos)
 		{
 			_pos = pos;
+			Reposition();
 		}
 
 		public void OnSelected()
@@ -38,7 +39,7 @@ namespace Actor
 			if (_isSelected)
 			{
 				_isSelected = false;
-				OnReleased();
+				OnReleased(_pos);
 				return;
 			}
 			
@@ -47,10 +48,26 @@ namespace Actor
 			Global._map.SetMovable(_pos, _range);
 		}
 
-		public void OnReleased()
+		public void OnReleased(int pos)
 		{
+			if (Global._map.CheckRange(_pos, pos, _range))
+			{
+				_pos = pos;
+				Reposition();
+			}
+			
 			GetComponent<Renderer> ().material.color = Color.white;
 			Global._map.ResetMovable();
+		}
+		
+		public int GetPos()
+		{
+			return _pos;
+		}
+		
+		private void Reposition()
+		{
+			_Trans.position = Global._map.GetIdxPos(_pos);
 		}
 	}
 }

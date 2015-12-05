@@ -1,7 +1,9 @@
+using UnityEngine;
 using System.Collections.Generic;
 
 public class LocalMap
 {
+	public const int MAP_WIDTH = 5;
 	private List<Ground> _map = new List<Ground>();
 	private List<int> _selected = new List<int>();
 	
@@ -9,6 +11,10 @@ public class LocalMap
 	{
 		try
 		{
+			int idx = _map.Count;
+			ground.transform.localPosition = new Vector3(idx % MAP_WIDTH, idx / MAP_WIDTH, 0);
+            ground.transform.localScale = new Vector3(Global.TILE_SCALE, Global.TILE_SCALE, Global.TILE_SCALE);
+			ground.Init(idx);
 			_map.Add(ground);
 		}
 		catch
@@ -29,7 +35,7 @@ public class LocalMap
 	{
 		foreach (var idx in _selected)
 		{
-			_map[idx].OnReleased();
+			_map[idx].OnReleased(idx);
 		}
 		
 		_selected.Clear();
@@ -47,18 +53,9 @@ public class LocalMap
 	{
 		ReleaseSelected();
 		
-		int curX = curPos / Global.MAP_WIDTH;
-		int curY = curPos % Global.MAP_WIDTH;
-		
-		int x, y;
 		for (int i = 0; i < GetSize(); ++i)
 		{
-			x = i / Global.MAP_WIDTH;
-			y = i % Global.MAP_WIDTH;
-			
-			var dis = System.Math.Abs(curX - x) + System.Math.Abs(curY - y);
-			
-			if (dis <= range)
+			if (CheckRange(curPos, i, range))
 			{
 				_selected.Add(i);
 			}
@@ -67,8 +64,23 @@ public class LocalMap
 		SetSelected();
 	}
 	
+	public bool CheckRange(int pos, int checkPos, int range)
+	{
+		int curX = pos / MAP_WIDTH;
+		int curY = pos % MAP_WIDTH;
+		var x = checkPos / MAP_WIDTH;
+		var y = checkPos % MAP_WIDTH;
+		var dis = System.Math.Abs(curX - x) + System.Math.Abs(curY - y);
+		return dis <= range;
+	}
+	
 	public void ResetMovable()
 	{
 		ReleaseSelected();
+	}
+	
+	public Vector3 GetIdxPos(int idx)
+	{
+		return _map[idx].transform.position;
 	}
 }

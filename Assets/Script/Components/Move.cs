@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Component
+﻿namespace Component
 {
 	public class Move : Base
 	{

@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Control
 {
 	public interface IClickable
 	{
+		int GetPos();
 		void OnSelected();
-		void OnReleased();
+		void OnReleased(int pos);
 	}
 
 	public class Manager : MonoBehaviour {
-		public float _perspectiveZoomSpeed = 0.1f;        // The rate of change of the field of view in perspective mode.
-		public float _orthoZoomSpeed = 0.1f;        // The rate of change of the orthographic size in orthographic mode.
+		public const float _perspectiveZoomSpeed = 0.1f;        // The rate of change of the field of view in perspective mode.
+		public const float _orthoZoomSpeed = 0.1f;        // The rate of change of the orthographic size in orthographic mode.
 		public IClickable _touched { get; private set; }
 		
 		void Update()
@@ -54,18 +54,19 @@ namespace Control
 		
 		private void ProcessClick(Vector2 pos)
 		{
-            if (_touched != null)
-            {
-                _touched.OnReleased();
-            }
             Ray ray = Camera.main.ScreenPointToRay(pos);
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(ray, out hit))
             {
-                _touched = hit.collider.GetComponent(typeof(IClickable)) as IClickable;
-                if (_touched != null)
+                var curTouch = hit.collider.GetComponent(typeof(IClickable)) as IClickable;
+                if (curTouch != null)
                 {
-                    _touched.OnSelected();
+					if (_touched != null)
+					{
+						_touched.OnReleased(curTouch.GetPos());
+					}
+                    curTouch.OnSelected();
+					_touched = curTouch;
                 }
             }
         }
