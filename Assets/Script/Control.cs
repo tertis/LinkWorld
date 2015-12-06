@@ -16,8 +16,11 @@ namespace Control
 		
 		void Update()
 		{
+#if UNITY_EDITOR
 			ProcessMouse();
+#else
 			ProcessTouch();
+#endif
 		}
 		
 		private void ProcessMouse()
@@ -59,15 +62,25 @@ namespace Control
             if (Physics.Raycast(ray, out hit))
             {
                 var curTouch = hit.collider.GetComponent(typeof(IClickable)) as IClickable;
-                if (curTouch != null)
-                {
-					if (_touched != null)
+				
+				if (_touched != null)
+				{
+					int mapPos;
+					mapPos = _touched.GetPos();
+					if (curTouch != null)
 					{
-						_touched.OnReleased(curTouch.GetPos());
+						mapPos = curTouch.GetPos();
 					}
-                    curTouch.OnSelected();
-					_touched = curTouch;
-                }
+					
+					_touched.OnReleased(mapPos);
+					curTouch = null;
+				}
+				else if (_touched == null && curTouch != null)
+				{
+					curTouch.OnSelected();
+				}
+				
+				_touched = curTouch;
             }
         }
 		
@@ -79,7 +92,7 @@ namespace Control
 				
 				// Find the magnitude of the vector (the distance) between the touches in each frame.
 				float prevTouchDeltaMag = (onePrevPos - otherPrevPos).magnitude;
-				float touchDeltaMag = (one.position - one.position).magnitude;
+				float touchDeltaMag = (one.position - other.position).magnitude;
 				
 				// Find the difference in the distances between each frame.
 				float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;

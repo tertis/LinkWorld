@@ -55,6 +55,7 @@ namespace Actor
 				_pos = pos;
 				Reposition();
 			}
+			_isSelected = false;
 			
 			GetComponent<Renderer> ().material.color = Color.white;
 			Global._map.ResetMovable();
