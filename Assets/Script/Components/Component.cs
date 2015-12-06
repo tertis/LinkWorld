@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Component
+namespace Part
 {
 	public interface IOwner
 	{

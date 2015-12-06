@@ -1,4 +1,4 @@
-﻿namespace Component
+﻿namespace Part
 {
 	public class Move : Base
 	{

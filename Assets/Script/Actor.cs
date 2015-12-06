@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Actor
 {
-	public abstract class Base : MonoBehaviour, Component.IOwner {
-		protected List<Component.Base> _Components = new List<Component.Base>();
+	public abstract class Base : MonoBehaviour, Part.IOwner {
+		protected List<Part.Base> _Components = new List<Part.Base>();
 
 		public Transform _Trans { get { return transform; } }
 
@@ -17,7 +17,7 @@ namespace Actor
 
 		public virtual void OnUpdate()
 		{
-			foreach (Component.Base com in _Components) {
+			foreach (Part.Base com in _Components) {
 				com.Action();
 			}
 		}
