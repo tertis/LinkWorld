@@ -7,6 +7,7 @@ public class Loader : MonoBehaviour
     {
         Manager.Resource.Create();        
         Global.Create();
+        UI.UIManager.CreateStartUI();
 
         GameObject obj = new GameObject("InputMgr");
         obj.AddComponent<Control.Manager>();

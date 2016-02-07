@@ -24,14 +24,12 @@ namespace Manager
 
 	public class Resource
 	{
-		public static ReadOnlyCollection<Texture2D> Ground;
 		public static ReadOnlyCollection<string> GroundName;
 		public static ReadOnlyCollection<int> Map;
 
 		public static void Create()
 		{
 			Log.Trace ("Resource Create Start");
-			Ground = new ReadOnlyCollection<Texture2D> (Action.LoadAll<Texture2D>("Texture/Ground"));
 			GroundName = new ReadOnlyCollection<string> (Action.Load<TextAsset> ("Data/GroundName").text.Replace("\n", "").Split(','));
 			Map = new ReadOnlyCollection<int>( System.Array.ConvertAll <string,int>(Action.Load<TextAsset> ("Data/Map").text.Replace("\n", "").Split(','), int.Parse));
 
