@@ -9,11 +9,17 @@ public static class Global
     public const float TILE_SCALE = 0.95f;
 	public static LocalMap _map { get; private set; }
     
+    // ID 관련 값
+    public const int MIN_ID_LENGTH = 4;
+    public const int MAX_ID_LENGTH = 16;
+    public const int MIN_PASSWORD_LENGTH = 8;
+    public const int MAX_PASSWORD_LENGTH = 16; 
+    
     private static Transform _root;
 	
 	public static bool Create()
 	{
-        _root = (new GameObject(GLOBALNAME)).transform;
+        InitializeRoot();
 		InitializeMap();
         InitializeActor();
         InitializeCamera();
@@ -24,26 +30,34 @@ public static class Global
 	{
 		return true;
 	}
+    
+    public static bool InitializeRoot()
+    {
+        _root = (new GameObject(GLOBALNAME)).transform;
+        return true;
+    }
 	
 	 /// <summary>
     /// Initializes the map.
     /// </summary>
-    private static void InitializeMap()
+    public static bool InitializeMap()
     {
 		_map = new LocalMap();
-        for (int i = 0; i < Manager.Resource.Map.Count; ++i)
+        for (int i = 0; i < Resource.Data.mapNum.Count; ++i)
         {
-            string tileName = Manager.Resource.GroundName[Manager.Resource.Map[i]];
+            string tileName = Resource.Data.groundName[Resource.Data.mapNum[i]];
             var obj = CreateTile(tileName);
             
             _map.AddGround(obj.AddComponent<Ground>());
         }
+        
+        return _map.GetSize() > 0;
     }
 
-    private static GameObject CreateTile(string tileName)
+    public static GameObject CreateTile(string tileName)
     {
-        var prefabTile = Manager.Action.Load<GameObject>(GROUND_PATH);
-        var tileMat = Manager.Action.Load<Material>(MATERIAL_PATH + tileName);
+        var prefabTile = Resource.Data.Load<GameObject>(GROUND_PATH);
+        var tileMat = Resource.Data.Load<Material>(MATERIAL_PATH + tileName);
         var obj = GameObject.Instantiate(prefabTile);
         obj.GetComponent<MeshRenderer>().material = tileMat;
         obj.transform.SetParent(_root);
@@ -54,16 +68,18 @@ public static class Global
     /// <summary>
     /// Initializes the actor.
     /// </summary>
-    private static void InitializeActor()
+    public static bool InitializeActor()
     {
-        var prefabPawn = Manager.Action.Load<GameObject>(PAWN_PATH);
+        var prefabPawn = Resource.Data.Load<GameObject>(PAWN_PATH);
         var obj = GameObject.Instantiate(prefabPawn);
         obj.transform.localScale = new Vector3(TILE_SCALE, TILE_SCALE, TILE_SCALE);
         obj.transform.SetParent(_root);
         obj.AddComponent<Actor.Movable>().Init(0);
+        
+        return true;
     }
 
-    private static void InitializeCamera()
+    public static void InitializeCamera()
     {
         var trans = Camera.main.transform;
 
