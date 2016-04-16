@@ -2,8 +2,8 @@
 using UnityEngine.SceneManagement;
 
 public class Login : MonoBehaviour {
-    public bool OnClickLogin()
+    public void OnClickLogin()
     {
-        return UI.Manager.NextLevel();
+        UI.Manager.NextLevel();
     }
 }
